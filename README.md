@@ -1,6 +1,7 @@
-# ktm
+# New Bike Selling App (KTM Official App clone)
 
-A new Flutter project.
+A clone application of official KTM app developed using Flutter for front-end and PHP for back-end. 
+The application is developed for educational purpose only.
 
 ## Getting Started
 
