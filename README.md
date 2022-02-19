@@ -29,3 +29,5 @@ Open CMD from where you want to clone the project & run the following commands:
  ```
   flutter run
 ```
+## ❤ Conclusion
+🌟 Star this repo & follow for more 😊
