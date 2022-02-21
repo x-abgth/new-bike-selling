@@ -23,7 +23,7 @@ const List<AssetImage> carouselList = [
 ];
 
 // KTM bikes data url
-const ip = "192.168.42.155";
+const ip = "192.168.42.139";
 
 // Bike Data Urls
 const bikesUrl = 'http://$ip/ktm/lib/bike-data/fetchData.php';

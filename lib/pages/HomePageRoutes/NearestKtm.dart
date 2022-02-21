@@ -38,6 +38,12 @@ class _NearestKtmState extends State<NearestKtm> {
     });
   }
 
+  @override
+  void dispose() {
+    mapController.dispose();
+    super.dispose();
+  }
+
   // fetching  the location data from internet
   Future<List<CenterData>> fetchData() async {
     var response = await http.get(Uri.parse(ktmCenterUrl));
@@ -84,114 +90,118 @@ class _NearestKtmState extends State<NearestKtm> {
   }
 
   // Assigning markers and setting a map style
-  Future<void> _onMapCreated(GoogleMapController mapController) async {
+  Future<void> _onMapCreated(mapController) async {
     mapController.setMapStyle(Utils.mapStyle);
     Color callIconColor = kPrimary;
     Color callBgColor = Colors.transparent;
+
     locatePosition();
     setState(() {
       markers.clear();
-      for (var i = 0; i <= _data.length; i++) {
-        final xMarker = Marker(
-          markerId: MarkerId(_data[i].id),
-          icon: mapMarker,
-          position: LatLng(double.parse(_data[i].latitude),
-              double.parse(_data[i].longitude)),
-          infoWindow: InfoWindow(
-            title: _data[i].center_name,
-            snippet: _data[i].center_address ?? _data[i].center_name,
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (BuildContext context) {
-                  return Container(
-                    padding: EdgeInsets.all(15),
-                    height: 170,
-                    color: kPrimaryDark,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          _data[i].center_name,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: kPrimary,
-                            fontFamily: "Roboto",
+      if (_data.isNotEmpty) {
+        for (var i = 0; i < _data.length; i++) {
+          final xMarker = Marker(
+            markerId: MarkerId(_data[i].id ?? 0),
+            icon: mapMarker,
+            position: LatLng(double.parse(_data[i].latitude),
+                double.parse(_data[i].longitude)),
+            infoWindow: InfoWindow(
+              title: _data[i].center_name,
+              snippet: _data[i].center_address ?? _data[i].center_name,
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      padding: EdgeInsets.all(15),
+                      height: 170,
+                      color: kPrimaryDark,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            _data[i].center_name,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: kPrimary,
+                              fontFamily: "Roboto",
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 5),
-                        SizedBox(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Text(
-                                  _data[i].center_address ?? "",
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: "Roboto",
-                                      color: Colors.white60),
+                          SizedBox(height: 5),
+                          SizedBox(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Text(
+                                    _data[i].center_address ?? "",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontFamily: "Roboto",
+                                        color: Colors.white60),
+                                  ),
                                 ),
-                              ),
-                              InkWell(
-                                borderRadius: BorderRadius.circular(50),
-                                splashColor: Colors.white12,
-                                onFocusChange: (e) {
-                                  if (e == true) {
-                                    setState(() {
-                                      callIconColor = kPrimaryDark;
-                                      callBgColor = kPrimary;
-                                    });
-                                  }
-                                },
-                                onTap: _data[i].contact_number == ""
-                                    ? () {
-                                        Fluttertoast.showToast(
-                                          msg:
-                                              "Contact number is not provided by KTM",
-                                          toastLength: Toast.LENGTH_LONG,
-                                          gravity: ToastGravity.BOTTOM,
-                                        );
-                                      }
-                                    : () async {
-                                        String url =
-                                            'tel:${_data[i].contact_number}';
-                                        if (await canLaunch(url)) {
-                                          await launch(url);
-                                        } else {
-                                          throw 'Could not call ${_data[i].contact_number}';
+                                InkWell(
+                                  borderRadius: BorderRadius.circular(50),
+                                  splashColor: Colors.white12,
+                                  onFocusChange: (e) {
+                                    if (e == true) {
+                                      setState(() {
+                                        callIconColor = kPrimaryDark;
+                                        callBgColor = kPrimary;
+                                      });
+                                    }
+                                  },
+                                  onTap: _data[i].contact_number == ""
+                                      ? () {
+                                          Fluttertoast.showToast(
+                                            msg:
+                                                "Contact number is not provided by KTM",
+                                            toastLength: Toast.LENGTH_LONG,
+                                            gravity: ToastGravity.BOTTOM,
+                                          );
                                         }
-                                      },
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 50),
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                      color: callBgColor,
-                                      borderRadius: BorderRadius.circular(50),
-                                      border: Border.all(
-                                        color: kPrimary,
-                                        width: 3,
-                                      )),
-                                  child: Icon(Icons.call, color: callIconColor),
+                                      : () async {
+                                          String url =
+                                              'tel:${_data[i].contact_number}';
+                                          if (await canLaunch(url)) {
+                                            await launch(url);
+                                          } else {
+                                            throw 'Could not call ${_data[i].contact_number}';
+                                          }
+                                        },
+                                  child: Container(
+                                    margin: EdgeInsets.only(left: 50),
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        color: callBgColor,
+                                        borderRadius: BorderRadius.circular(50),
+                                        border: Border.all(
+                                          color: kPrimary,
+                                          width: 3,
+                                        )),
+                                    child:
+                                        Icon(Icons.call, color: callIconColor),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              );
-            },
-          ),
-        );
-        markers[_data[i].center_name] = xMarker;
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          );
+          markers[_data[i].center_name] = xMarker;
+        }
       }
     });
   }
@@ -216,7 +226,10 @@ class _NearestKtmState extends State<NearestKtm> {
               ? CircularProgressIndicator()
               : GoogleMap(
                   onTap: (_) {},
-                  onMapCreated: _onMapCreated,
+                  onMapCreated: (controller) {
+                    _onMapCreated(controller);
+                    return mapController = controller;
+                  },
                   myLocationEnabled: true,
                   myLocationButtonEnabled: true,
                   zoomGesturesEnabled: true,
