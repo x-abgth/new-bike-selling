@@ -1,5 +1,9 @@
 # New Bike Selling App (KTM Official App clone)
 A clone application of official KTM app developed using Flutter for front-end and PHP for back-end. The application uses google maps to locate nearest KTM showrooms, this helped me to work on with different flutter dependency. 
+<br><br>
+![KTM App map](assets/ui_imgs/map_1_black.png)
+![KTM App map](assets/ui_imgs/map_2_black.png)
+![KTM App map](assets/ui_imgs/map_3_black.png)
 >The application is developed for educational purpose only.
 
 ## 🔗 API Information
