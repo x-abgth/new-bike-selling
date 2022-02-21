@@ -1,0 +1,738 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Trebuchet MS;
+  background-color: #fff;
+}
+
+#ktmlogobg {
+  background: #FF4500;
+  width: 150px;
+  height: 180px;
+  position: absolute;
+  right: 20px;
+  top: 0px;
+  padding: auto;
+  pointer-events: none;
+}
+#ktmlogo {
+  width: 140px;
+  height: 150px;
+  top: 30%;
+  pointer-events: none;
+}
+
+/*admin_login.html*/
+
+.wrapper {
+  height: 100vh;
+  background-image: url("../assets/ktmBg.jpg");
+  background-size: cover;
+  background-position: top;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner {
+  width: 380px;
+  height: 550px;
+  background-color: #fff;
+  box-shadow: 5px 10px 15px 5px #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  border: 1px solid #979A9A ;
+}
+
+.login_form{
+  margin: 0px 0px 10px;
+  text-align: center;
+  width: 500px;
+  overflow: hidden;
+}
+
+.log-sections{
+  display: flex;
+  flex-direction: row;
+}
+
+#sh-login{
+  margin-left: 60px;
+  transition: 0.5s;
+}
+
+#admin-login{
+  margin-left: 100px;
+  transition: 0.5s;
+}
+
+.btn-box{
+  width: 300px;
+  margin: 0px auto;
+  margin-bottom: 30px;
+  position: relative;
+  box-shadow: 0 0 20px 9px #ff61241f;
+  border-radius: 30px;
+}
+.toggle-btn {
+  padding: 10px 45px;
+  text-align: center;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  outline: none;
+  position: relative;
+}
+#bg-btn{
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 150px;
+  height: 100%;
+  background: linear-gradient(to right, #FF4500, #FF6E00);
+  border-radius: 30px;
+  transition: 0.5s;
+}
+
+.login_form #user{
+  height: 80px;
+  width: 80px;
+  pointer-events: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.login_form h1, h2{
+  color: #000;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.input-1 {
+  display: flex;
+  flex-direction: row;
+}
+.input-2 {
+  display: flex;
+  flex-direction: row;
+}
+
+.login_form #user_icon{
+  height: 25px;
+  width: 25px;
+  float: left;
+  pointer-events: none;
+}
+
+.login_form #pass_icon{
+  height: 25px;
+  width: 25px;
+  float: left;
+  pointer-events: none;
+}
+
+.login_form input[name="loginUname"], .login_form input[name="loginPass"]{
+  font-size: 15px;
+  background-color: transparent;
+  color: #000;
+  display: block;
+  text-align: left;
+  padding: 14px 10px;
+  width: 205px;
+  border: none;
+  border-bottom: 2px solid #333333;
+}
+
+.login_form input[name="loginUname"]:focus, .login_form input[name="loginPass"]:focus {
+  width: 205px;
+  background-color: transparent;
+  border: none;
+  outline: 0;
+  border-bottom: 2px solid #FF4500;
+}
+
+/* Change Autocomplete styles in Chrome*/
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: none;
+  border-bottom: 2px solid #333333;
+  -webkit-text-fill-color: #000;
+  -webkit-box-shadow: 0 0 0px 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+#login_error {
+  background-color: #f2dede;
+  color: #a94442;
+  text-align: center;
+  padding: 10px;
+  margin: 0px 10%;
+  width: 70%;
+  border-radius: 5px;
+}
+
+.login_form input[name="loginBt"]{
+  background: #FF4500;
+  color: #ffffff;
+  border: 2px solid #FF4500;
+  margin-top: 30px;
+  padding: 10px 10px;
+  width: 130px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 2px;
+  transition: all 0.3s ease 0s;
+
+}
+
+.login_form input[name="loginBt"]:hover{
+  cursor: pointer;
+  background-color: transparent;
+  color: #FF4500;
+  border: 2px solid #FF4500;
+}
+
+/*admin_home.html*/
+
+.header_wrapper {
+  background-image: url("../assets/ktmBg2.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 450px;
+}
+
+.showroom_wrapper {
+  background-image: url("../assets/ktmBg3.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 500px;
+}
+header{
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 170px;
+  align-items: center;
+  padding: 30px 3%;
+}
+
+.user{
+  pointer-events: none;
+  margin-right: auto;
+  height: 30px;
+  width: 30px; 
+  border-radius: 50%;
+}
+
+#home_admin {
+  color: white;
+  margin: auto;
+  position: absolute;
+  left: 80px;
+}
+
+.home_nav_links {
+  list-style: none;
+}
+
+.home_nav_links li{
+  display: inline-block;
+  padding: 0px 20px;
+}
+
+.home_nav_links li a{
+  transition: all 0.3s ease 0s;
+  color: white;
+  text-decoration: none;
+}
+
+.home_nav_links li a:hover{
+  color: #FF4500;
+}
+
+.widgets{
+  position: relative;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.home-widget-row {
+  display: inline-flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.widgets h2{
+  color: #FF4500;
+} 
+
+.home-card {
+  background-color: white;
+  height: 220px;
+  width: 300px;
+  padding: 10px;
+  position: relative;
+  margin: 30px 0px;
+  text-align: center;
+  color: #000;
+  box-shadow: 5px 10px 15px 5px #888888;
+}
+
+.widgets input[type="submit"] {
+  background-color: #FF4500;
+  border: none;
+  color: #FFFFFF;
+  margin-top: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+  outline: none;
+}
+.widgets input[type="submit"]:focus {
+  background-color: transparent;
+  color: #FF4500;
+  border: 2px solid #FF4500;
+}
+
+.a-footer-nav{
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin: 30px auto;
+}
+
+.a-footer-nav li{
+  display: inline-block;
+  padding: 0px 50px;
+}
+
+.a-footer-nav li a{
+  font-size: 1.3em;
+  transition: all 0.3s ease 0s;
+  color: #2E2E2E;
+}
+
+.a-footer-nav li a:hover{
+  color: #FF4500;
+}
+
+/*admin_insert.html*/
+
+#admin_head{
+  font-size: 50px;
+  font-weight: bold;
+  text-align: center;
+  margin: 60px 0px 30px;
+}
+
+#admin {
+  color: black;
+  margin: auto;
+  position: absolute;
+  left: 80px;
+}
+
+.nav_links {
+  list-style: none;
+}
+
+.nav_links li{
+  display: inline-block;
+  padding: 0px 20px;
+}
+
+.nav_links li a{
+  transition: all 0.3s ease 0s;
+  color: black;
+  text-decoration: none;
+}
+
+.nav_links li a:hover{
+  color: #FF4500;
+}
+
+.insert_form {
+  padding: 20px;
+}
+
+.row input[type=text], input[type=number], select, option{
+  width: 100%;
+  padding: 12px;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+} 
+
+.row textarea {
+  padding: 12px;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.row input[type=file] {
+  margin-top: 10px;
+}
+
+.row input[name="price"] {
+  border-left: 0;
+  outline: 0;
+  margin-left: 0;
+}
+
+.flex {
+  display: flex;
+  justify-content: flex-start;
+} 
+
+.flex #ruppee {
+  color: #999;
+  font-size: 20px;
+  padding: 10px 10px 0 20px;
+  border: 1px solid #ccc;
+  border-right: 0;
+  border-radius: 4px 0 0 4px;
+  background-color: white;
+}
+
+.radio + .radio{
+  margin-left: 50px;
+}
+
+.row #label {
+  padding: 12px 12px 12px 0;
+  display: inline-flex;
+}
+
+.insert_form_head{
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 0px;
+  text-transform: uppercase;
+  color: #FF4500;
+}
+
+.row #img_lmt{
+  font-size: 12px;
+}
+
+.image_preview{
+  width: 300px;
+  min-height: 100px;
+  border: 2px solid #dddddd;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: #cccccc;
+}
+
+.preview_img{
+  display: none;
+  width: 100%;
+  text-align: center;
+}
+
+.row input[type=submit] {
+  background: transparent;
+  color: #FF4500;
+  padding: 12px 20px;
+  width: 280px;
+  border: 2px solid #FF4500;
+  cursor: pointer;
+  position: relative;
+  margin-left: 40%;
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.row input[type=submit]:hover {
+  background-color: #FF4500;
+  color: white;
+}
+
+.row #label {
+  float: left;
+  width: 15%;
+  margin-top: 8px;
+}
+
+.row #input{
+  float: left;
+  width: 55%;
+  margin-top: 8px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* admin_view.php */
+
+.view_banner{
+  width: 100%;
+} 
+
+.bike_table {
+  position: relative;
+  margin-top: 80px;
+  margin-right: 50px;
+  margin-right: 10px;
+  margin-bottom: 150px;
+}
+
+.bike_table table{
+  border-collapse: collapse;
+}
+
+.bike_table th, .bike_table td {
+  border: 1px solid #ddd;
+  padding: 15px 25px;
+  white-space: pre;
+  text-align: center;
+}
+
+.bike_table tr:nth-child(even){background-color: #f6f4f1;}
+
+.bike_table tr:hover {background-color: #f3f0e8;}
+
+.bike_table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #EF6C00;
+  color: white;
+  overflow-x: auto;
+  overflow-y: hidden;
+} 
+
+.bike_table #empty_table {
+  text-align: center;
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+.bike_table #new_record{
+  color: #FF4500 ;
+  font-size: 16px;
+  text-decoration: none;
+  border: 2px solid #FF4500;
+  background-color: transparent;
+  text-transform: uppercase;
+  padding: 10px;
+  position: absolute;
+  top: -60px;
+  left: 10px;
+} 
+
+.bike_table #new_record:hover {
+  color: white;
+  background-color: #FF4500;
+}
+
+.bike_table #edit_link{
+  color: green;
+  background-color: transparent;
+  padding-right: 30px;
+} 
+ 
+.bike_table #dlt_link{
+  color: red;
+  background-color: transparent;
+  padding-left: 10px;
+} 
+
+.update_row_bt {
+  position: relative;
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+input[name="update_bt"] {
+  background: transparent;
+  padding: 12px 20px;
+  width: 280px;
+  cursor: pointer;
+  position: relative;
+  margin-right: 25%;
+  color: #FF4500;
+  border: 2px solid #FF4500;
+  float: right;
+}
+
+input[name="update_bt"]:hover {
+  background-color: #FF4500;
+  color: white;
+}
+
+input[name="cancel_bt"] {
+  background: transparent;
+  padding: 12px 20px;
+  width: 280px;
+  cursor: pointer;
+  position: relative;
+  margin-left: 25%;
+  color: #282828;
+  border: 2px solid #282828;
+  float: left;
+}
+
+input[name="cancel_bt"]:hover {
+  background-color: #282828;
+  color: white;
+}
+
+/* create_admin.php */
+
+.a_banner{
+  padding: 2px;
+}
+
+.a_form {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.a_row input[type=text], input[type=password]{
+  width: 300px;
+  padding: 12px;
+  background-color: transparent;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+} 
+
+.a_row input[type=submit] {
+  background: transparent;
+  color: #FF4500;
+  padding: 12px 20px;
+  width: 280px;
+  border: 2px solid #FF4500;
+  cursor: pointer;
+  position: relative;
+  margin-left: 7%;
+  margin-top: 30px;
+  margin-bottom: 50px;
+}
+
+.a_row input[type=submit]:hover {
+  background-color: #FF4500;
+  color: white;
+}
+
+.a_row #label {
+  width:200px;
+  margin-top: 8px;
+}
+
+.a_row #input{
+  width: 300px;
+  margin-top: 8px;
+  margin-bottom: 20px;
+
+}
+
+/* Clear floats after the columns */
+.a_row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* KTM- Center*/
+
+#center_table_controller{
+  border: none;
+  text-decoration: underline;
+  background-color: white;
+  font-size: 1.3em;
+  position: relative;
+  margin: 0px 0px 10px 30px;
+  color: #FF4500;
+  cursor: pointer;
+}
+
+#center_table_controller:hover {
+  color: black;
+}
+
+#free-space {
+  height: 100px;
+}
+
+/* bookings page */
+.b-hero{
+  height: 450px;
+  position: relative;
+  margin: 100px auto;
+  padding-left: 50px;
+}
+
+.b-btn-box {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.b-btn-box button{
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  margin-right: 50px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+[data-tab-content] {
+  margin: 5% auto;
+  display: none;
+}
+
+.active[data-tab-content]{
+  display: block;
+}
+
+.tabs{
+  display: flex;
+  justify-content: space-around;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid #EF6C00;
+}
+
+.tab{
+  cursor: pointer;
+  padding: 10px 50px;
+}
+
+.tab.active{
+  background-color: #FF4500;
+  color: white;
+}
+
+.tab:hover{
+  background-color: #FF9248;
+}
+
+
