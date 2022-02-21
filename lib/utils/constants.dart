@@ -39,6 +39,3 @@ const userLoginUrl = "http://$ip/ktm/lib/user-data/login_user.php";
 
 // Bike manual
 const manualUrl = "https://www.ktm.com/en-in/service/manuals.html";
-
-// google api key
-// AIzaSyBSFsa0tWsiVwCUuP3syEbeUEy8N2FKLa4
