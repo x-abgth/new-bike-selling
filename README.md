@@ -17,7 +17,11 @@ The database, API and all other back-end fucntions are created by me only for th
 - Attractive and user friendly ui design
 
 ## 📱 Screenshots
-
+  ![KTM App home page](assets/ui_imgs/home_page.png)&ensp;&ensp;
+  ![KTM App profile page](assets/ui_imgs/profile_page.png)&ensp;&ensp;
+  ![KTM App sign-in page](assets/ui_imgs/signin_page.png)&ensp;&ensp;
+  ![KTM App bike list](assets/ui_imgs/bike_list.png)&ensp;&ensp;
+  ![KTM App bike details](assets/ui_imgs/bike_details.png)&ensp;&ensp;
 
 ## 💻 Test application on your machine
 Open CMD from where you want to clone the project & run the following commands:
