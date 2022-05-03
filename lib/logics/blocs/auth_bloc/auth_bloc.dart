@@ -11,22 +11,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthenticationRepository authenticationRepository =
       AuthenticationRepository();
   AuthBloc() : super(UnAuthenticated()) {
-    on<SignInRequested>((event, emit) {
+    on<SignInRequested>((event, emit) async {
       emit(Authenticating());
       try {
-        authenticationRepository.signInFunc(
+        final String msg = await authenticationRepository.signInFunc(
             email: event.email, password: event.password);
-        emit(Authenticated());
+        if (msg == 'Login Matched') {
+          emit(Authenticated());
+        } else {
+          emit(AuthenticationError(errorMsg: "Login credentials do not match"));
+          emit(UnAuthenticated());
+        }
       } catch (e) {
         emit(AuthenticationError(errorMsg: e.toString()));
         emit(UnAuthenticated());
       }
     });
 
-    on<SignUpRequested>((event, emit) {
+    on<SignUpRequested>((event, emit) async {
       emit(Authenticating());
       try {
-        final Response response = authenticationRepository.signUpFunc(
+        final Response response = await authenticationRepository.signUpFunc(
           context: event.context,
           key: event.key,
           emailTC: event.email,

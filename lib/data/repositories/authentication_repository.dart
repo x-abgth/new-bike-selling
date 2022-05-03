@@ -1,6 +1,8 @@
-import 'package:date_format/date_format.dart';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import '../../core/constants/constants.dart';
 
 abstract class AuthMain {
@@ -10,7 +12,7 @@ abstract class AuthMain {
 
 class AuthenticationRepository extends AuthMain {
   @override
-  signUpFunc({
+  Future<Response> signUpFunc({
     @required BuildContext context,
     @required GlobalKey<FormState> key,
     @required String fnameTC,
@@ -38,8 +40,18 @@ class AuthenticationRepository extends AuthMain {
   }
 
   @override
-  signInFunc({@required String email, @required String password}) {
-    // TODO: implement signUpFunc
-    throw UnimplementedError();
+  Future signInFunc({@required String email, @required String password}) async {
+    // Store all data with Param Name.
+    var data = {'email': email, 'password': password};
+    // Starting Web API Call.
+    var response = await http.post(
+      Uri.parse(userLoginUrl),
+      body: json.encode(data),
+    );
+    // Getting Server response into variable.
+    var message = jsonDecode(response.body);
+    return message;
+    // If the Response Message is Matched.
+    // if (message == 'Login Matched') {}
   }
 }

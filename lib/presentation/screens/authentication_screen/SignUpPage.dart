@@ -66,7 +66,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 MaterialPageRoute(builder: (context) => BottomNavBar()));
           }
           if (state is AuthenticationError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 backgroundColor: kPrimaryDark,
                 content: Text(
                   state.errorMsg,
@@ -317,9 +317,6 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
-
-//TODO: Should delete the id field
-//
 
   Widget buildSignupForm(
       {@required BuildContext context,
