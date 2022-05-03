@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:ktm/presentation/screens/authentication_screen/SignUpPage.dart';
 import 'package:ktm/presentation/screens/authentication_screen/widgets/ktm_logo_widget.dart';
-import 'package:ktm/presentation/widgets/NavSection.dart';
+import 'package:ktm/presentation/widgets/bottom_nav_bar.dart';
 import 'package:ktm/core/constants/constants.dart';
 
 class SignInPage extends StatefulWidget {
@@ -81,7 +81,7 @@ class _SignInPageState extends State<SignInPage> {
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => NavSection()));
+                            builder: (context) => BottomNavBar()));
                       },
                       child: Text(
                         "SKIP SIGN-IN",
@@ -140,7 +140,7 @@ class _SignInPageState extends State<SignInPage> {
 
       // Navigate to Profile Screen & Sending Email to Next Screen.
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => NavSection()));
+          .push(MaterialPageRoute(builder: (context) => BottomNavBar()));
     } else {
       // If Email or Password did not Matched.
       // Hiding the CircularProgressIndicator.

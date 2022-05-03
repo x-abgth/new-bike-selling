@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'presentation/widgets/NavSection.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ktm/data/repositories/authentication_repository.dart';
+import 'package:ktm/logics/blocs/auth_bloc/auth_bloc.dart';
+import 'presentation/widgets/bottom_nav_bar.dart';
 import 'core/constants/constants.dart';
 
 void main() => runApp(MyApp());
@@ -7,35 +10,46 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "KTM",
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        canvasColor: Colors.black,
-        primaryColor: kPrimary,
-        primaryColorDark: kPrimaryDark,
-        colorScheme: ThemeData().colorScheme.copyWith(secondary: kAccent),
-        textTheme: ThemeData.dark().textTheme.copyWith(
-              bodyText2: TextStyle(
-                fontFamily: "Iceland",
-                color: Colors.white,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<AuthenticationRepository>(
+            create: (context) => AuthenticationRepository()),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+        ],
+        child: MaterialApp(
+          title: "KTM",
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData.dark().copyWith(
+            canvasColor: Colors.black,
+            primaryColor: kPrimary,
+            primaryColorDark: kPrimaryDark,
+            colorScheme: ThemeData().colorScheme.copyWith(secondary: kAccent),
+            textTheme: ThemeData.dark().textTheme.copyWith(
+                  bodyText2: TextStyle(
+                    fontFamily: "Iceland",
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
+            iconTheme: IconThemeData(color: Colors.white),
+            appBarTheme: AppBarTheme(
+              titleTextStyle: TextStyle(
+                fontFamily: "Roboto",
+                color: kPrimary,
                 fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
+              color: Colors.black,
+              iconTheme: IconThemeData(color: kPrimary),
             ),
-        iconTheme: IconThemeData(color: Colors.white),
-        appBarTheme: AppBarTheme(
-          titleTextStyle: TextStyle(
-            fontFamily: "Roboto",
-            color: kPrimary,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+            scaffoldBackgroundColor: Colors.black,
           ),
-          color: Colors.black,
-          iconTheme: IconThemeData(color: kPrimary),
+          home: BottomNavBar(),
         ),
-        scaffoldBackgroundColor: Colors.black,
       ),
-      home: NavSection(),
     );
   }
 }

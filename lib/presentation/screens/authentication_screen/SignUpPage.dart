@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ktm/data/repositories/authentication_repository.dart';
 import 'package:ktm/presentation/screens/authentication_screen/widgets/ktm_logo_widget.dart';
-import 'package:ktm/presentation/widgets/NavSection.dart';
+import 'package:ktm/presentation/widgets/bottom_nav_bar.dart';
 import '../../../core/constants/constants.dart';
-import 'package:http/http.dart' as http;
 import 'package:date_format/date_format.dart';
+
+import '../../../logics/blocs/auth_bloc/auth_bloc.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key key}) : super(key: key);
@@ -13,6 +16,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  AuthenticationRepository authenticationRepository =
+      AuthenticationRepository();
   TextEditingController fnameTC = TextEditingController();
   TextEditingController lnameTC = TextEditingController();
   TextEditingController dobTC = TextEditingController();
@@ -24,7 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController phNoTC = TextEditingController();
   TextEditingController emailTC = TextEditingController();
   TextEditingController passTC = TextEditingController();
-  GlobalKey<FormState> _key = GlobalKey();
+  GlobalKey<FormState> _formKey = GlobalKey();
   GlobalKey<ScaffoldMessengerState> _scaffoldMsngrKey =
       GlobalKey<ScaffoldMessengerState>();
   bool _isDateSelected = false;
@@ -49,213 +54,264 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldMsngrKey,
-      body: Container(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height / 5.0,
-                    margin: EdgeInsets.only(left: 10),
-                    alignment: Alignment.centerLeft,
-                    child: GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(
-                            Icons.chevron_left,
-                            size: 30,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                          Text(
-                            "SIGN-IN PAGE",
-                            style: TextStyle(
-                                fontFamily: "Poppins",
-                                fontSize: 16,
-                                color: Theme.of(context).primaryColor,
-                                decoration: TextDecoration.none),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Spacer(),
-                  KtmLogoWidget(),
-                ],
-              ),
-              SizedBox(height: 30),
-              Card(
-                margin: EdgeInsets.all(20),
-                color: Colors.black,
-                child: Form(
-                  key: _key,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: buildSignupForm(
-                                context: context,
-                                controller: fnameTC,
-                                label: "Enter First Name",
-                                func: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "This field is required";
-                                  }
-                                },
-                                icon: Icons.person),
-                          ),
-                          Flexible(
-                            child: buildSignupForm(
-                                context: context,
-                                controller: lnameTC,
-                                label: "Enter Last Name",
-                                func: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "This field is required";
-                                  }
-                                }),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10.0, top: 10),
+      body: BlocListener<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is Authenticating) {
+            return showDialog(
+                context: context,
+                builder: (context) => CircularProgressIndicator());
+          }
+          if (state is Authenticated) {
+            return Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => BottomNavBar()));
+          }
+          if (state is AuthenticationError) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: kPrimaryDark,
+                content: Text(
+                  state.errorMsg,
+                  style: TextStyle(color: Colors.white),
+                )));
+          }
+        },
+        child: Container(
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: MediaQuery.of(context).size.height / 5.0,
+                      margin: EdgeInsets.only(left: 10),
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        onTap: () => Navigator.pop(context),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Icon(
-                              Icons.calendar_today,
+                              Icons.chevron_left,
+                              size: 30,
                               color: Theme.of(context).primaryColor,
                             ),
-                            SizedBox(width: 20),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () => _datePicker(context: context),
-                                child: _isDateSelected
-                                    ? Text(formatDate(_unformattedSelectedDate,
-                                        [dd, '-', mm, '-', yyyy]))
-                                    : Text(
-                                        "Select date of birth",
-                                        style: TextStyle(
-                                            color: Colors.white54,
-                                            fontFamily: "Roboto",
-                                            fontSize: 16),
-                                      ),
-                              ),
+                            Text(
+                              "SIGN-IN PAGE",
+                              style: TextStyle(
+                                  fontFamily: "Poppins",
+                                  fontSize: 16,
+                                  color: Theme.of(context).primaryColor,
+                                  decoration: TextDecoration.none),
                             ),
                           ],
                         ),
                       ),
-                      buildSignupForm(
-                          context: context,
-                          controller: areaTC,
-                          label: "Enter Street/Area/House No.",
-                          func: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "This field is required";
-                            }
-                          },
-                          icon: Icons.home),
-                      buildSignupForm(
-                          context: context,
-                          controller: townTC,
-                          label: "Enter Locality/Town",
-                          func: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "This field is required";
-                            }
-                          },
-                          icon: Icons.location_searching_outlined),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: buildSignupForm(
-                                context: context,
-                                controller: districtTC,
-                                label: "Enter City/District",
-                                func: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "This field is required";
-                                  }
-                                },
-                                icon: Icons.location_city_outlined),
-                          ),
-                          Flexible(
-                            child: buildSignupForm(
-                                context: context,
-                                controller: stateTC,
-                                label: "Enter State",
-                                func: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return "This field is required";
-                                  }
-                                }),
-                          ),
-                        ],
-                      ),
-                      buildSignupForm(
-                          context: context,
-                          controller: pinTC,
-                          label: "Enter Pincode",
-                          func: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "This field is required";
-                            }
-                          },
-                          icon: Icons.pin_drop_outlined),
-                      buildSignupForm(
-                          context: context,
-                          controller: phNoTC,
-                          label: "Enter Mobile Number",
-                          func: (value) {
-                            if (value.length != 10 || value.isEmpty) {
-                              return "Enter a valid phone number";
-                            }
-                          },
-                          icon: Icons.call),
-                      buildSignupForm(
-                          context: context,
-                          controller: emailTC,
-                          label: "Enter Email ID",
-                          func: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Enter a valid email id";
-                            }
-                          },
-                          icon: Icons.mail),
-                      buildSignupForm(
-                        context: context,
-                        controller: passTC,
-                        label: "Enter Password",
-                        func: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please enter a password";
-                          }
-                        },
-                        protection: true,
-                        icon: Icons.lock,
-                      ),
-                      SizedBox(height: 30),
-                      TextButton(
-                        onPressed: () => signUpBtn(ctx: context),
-                        child: Text("SIGN-UP"),
-                        style: TextButton.styleFrom(
-                          backgroundColor: Theme.of(context).primaryColor,
-                          primary: Colors.white,
-                          shape: StadiumBorder(),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 13),
+                    ),
+                    Spacer(),
+                    KtmLogoWidget(),
+                  ],
+                ),
+                SizedBox(height: 30),
+                Card(
+                  margin: EdgeInsets.all(20),
+                  color: Colors.black,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Flexible(
+                              child: buildSignupForm(
+                                  context: context,
+                                  controller: fnameTC,
+                                  label: "Enter First Name",
+                                  func: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "This field is required";
+                                    }
+                                  },
+                                  icon: Icons.person),
+                            ),
+                            Flexible(
+                              child: buildSignupForm(
+                                  context: context,
+                                  controller: lnameTC,
+                                  label: "Enter Last Name",
+                                  func: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "This field is required";
+                                    }
+                                  }),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0, top: 10),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.calendar_today,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              SizedBox(width: 20),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () => _datePicker(context: context),
+                                  child: _isDateSelected
+                                      ? Text(formatDate(
+                                          _unformattedSelectedDate,
+                                          [dd, '-', mm, '-', yyyy]))
+                                      : Text(
+                                          "Select date of birth",
+                                          style: TextStyle(
+                                              color: Colors.white54,
+                                              fontFamily: "Roboto",
+                                              fontSize: 16),
+                                        ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        buildSignupForm(
+                            context: context,
+                            controller: areaTC,
+                            label: "Enter Street/Area/House No.",
+                            func: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "This field is required";
+                              }
+                            },
+                            icon: Icons.home),
+                        buildSignupForm(
+                            context: context,
+                            controller: townTC,
+                            label: "Enter Locality/Town",
+                            func: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "This field is required";
+                              }
+                            },
+                            icon: Icons.location_searching_outlined),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: buildSignupForm(
+                                  context: context,
+                                  controller: districtTC,
+                                  label: "Enter City/District",
+                                  func: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "This field is required";
+                                    }
+                                  },
+                                  icon: Icons.location_city_outlined),
+                            ),
+                            Flexible(
+                              child: buildSignupForm(
+                                  context: context,
+                                  controller: stateTC,
+                                  label: "Enter State",
+                                  func: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "This field is required";
+                                    }
+                                  }),
+                            ),
+                          ],
+                        ),
+                        buildSignupForm(
+                            context: context,
+                            controller: pinTC,
+                            label: "Enter Pincode",
+                            func: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "This field is required";
+                              }
+                            },
+                            icon: Icons.pin_drop_outlined),
+                        buildSignupForm(
+                            context: context,
+                            controller: phNoTC,
+                            label: "Enter Mobile Number",
+                            func: (value) {
+                              if (value.length != 10 || value.isEmpty) {
+                                return "Enter a valid phone number";
+                              }
+                            },
+                            icon: Icons.call),
+                        buildSignupForm(
+                            context: context,
+                            controller: emailTC,
+                            label: "Enter Email ID",
+                            func: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Enter a valid email id";
+                              }
+                            },
+                            icon: Icons.mail),
+                        buildSignupForm(
+                          context: context,
+                          controller: passTC,
+                          label: "Enter Password",
+                          func: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Please enter a password";
+                            }
+                          },
+                          protection: true,
+                          icon: Icons.lock,
+                        ),
+                        SizedBox(height: 30),
+                        TextButton(
+                          onPressed: () {
+                            if (_formKey.currentState.validate() &&
+                                _unformattedSelectedDate != null) {
+                              BlocProvider.of<AuthBloc>(context)
+                                  .add(SignUpRequested(
+                                key: _formKey,
+                                context: context,
+                                dob: formatDate(_unformattedSelectedDate,
+                                    [yyyy, '-', mm, '-', dd]),
+                                firstName: fnameTC.text,
+                                lastName: lnameTC.text,
+                                email: emailTC.text,
+                                password: passTC.text,
+                                street: areaTC.text,
+                                city: districtTC.text,
+                                town: townTC.text,
+                                state: stateTC.text,
+                                phNumber: phNoTC.text,
+                                pinCode: pinTC.text,
+                              ));
+                            } else {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                      backgroundColor: kPrimaryDark,
+                                      content: Text(
+                                        "Please input all the fields!",
+                                        style: TextStyle(color: Colors.white),
+                                      )));
+                            }
+                          },
+                          child: Text("SIGN-UP"),
+                          style: TextButton.styleFrom(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            primary: Colors.white,
+                            shape: StadiumBorder(),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30, vertical: 13),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -264,37 +320,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
 //TODO: Should delete the id field
 //
-  signUpBtn({BuildContext ctx}) async {
-    if (_key.currentState.validate() && _unformattedSelectedDate != null) {
-      final response = await http.post(Uri.parse(addUserUrl), body: {
-        "name": "${fnameTC.text + " " + lnameTC.text}",
-        "address":
-            "${areaTC.text + "\n" + townTC.text + "\n" + districtTC.text + ", " + pinTC.text + "\n" + stateTC.text}",
-        "dob": formatDate(_unformattedSelectedDate, [yyyy, '-', mm, '-', dd]),
-        "phone": phNoTC.text,
-        "mail": emailTC.text,
-        "password": passTC.text,
-      });
-      if (response.statusCode == 200) {
-        Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => NavSection()));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: kPrimaryDark,
-            content: Text(
-              "An unknown error occured!",
-              style: TextStyle(color: Colors.white),
-            )));
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: kPrimaryDark,
-          content: Text(
-            "Please input all the fields!",
-            style: TextStyle(color: Colors.white),
-          )));
-    }
-  }
 
   Widget buildSignupForm(
       {@required BuildContext context,
