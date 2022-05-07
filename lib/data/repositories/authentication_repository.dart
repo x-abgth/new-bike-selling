@@ -2,17 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 import '../../core/constants/constants.dart';
 
 abstract class AuthMain {
   signUpFunc();
   signInFunc();
+  String getUserId(String email) {
+    List<String> head = email.split('@');
+    List<String> tail = head[1].split('.');
+    return (head[0] + tail[0]);
+  }
 }
 
 class AuthenticationRepository extends AuthMain {
   @override
-  Future<Response> signUpFunc({
+  Future<String> signUpFunc({
     @required BuildContext context,
     @required GlobalKey<FormState> key,
     @required String fnameTC,
@@ -28,6 +32,7 @@ class AuthenticationRepository extends AuthMain {
     @required String unformattedSelectedDate,
   }) async {
     final response = await http.post(Uri.parse(addUserUrl), body: {
+      "id": getUserId(emailTC),
       "name": "${fnameTC + " " + lnameTC}",
       "address":
           "${areaTC + "\n" + townTC + "\n" + districtTC + ", " + pinTC + "\n" + stateTC}",
@@ -36,22 +41,24 @@ class AuthenticationRepository extends AuthMain {
       "mail": emailTC,
       "password": passTC,
     });
-    return response;
+    if (response.statusCode == 200) {
+      final String data = json.decode(response.body);
+      return data;
+    }
+    return "error";
   }
 
   @override
-  Future signInFunc({@required String email, @required String password}) async {
-    // Store all data with Param Name.
-    var data = {'email': email, 'password': password};
-    // Starting Web API Call.
+  Future<String> signInFunc(
+      {@required String email, @required String password}) async {
     var response = await http.post(
       Uri.parse(userLoginUrl),
-      body: json.encode(data),
+      body: {'email': email, 'password': password},
     );
-    // Getting Server response into variable.
-    var message = jsonDecode(response.body);
-    return message;
-    // If the Response Message is Matched.
-    // if (message == 'Login Matched') {}
+    if (response.statusCode == 200) {
+      final String message = json.decode(response.body);
+      return message;
+    }
+    return "error";
   }
 }

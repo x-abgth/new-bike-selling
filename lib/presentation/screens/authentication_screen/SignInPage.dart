@@ -25,13 +25,30 @@ class _SignInPageState extends State<SignInPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is Authenticating) {
-            return CircularProgressIndicator();
+            return showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => AlertDialog(
+                title: Text("Please wait. Signing in..."),
+                content: Row(
+                  children: [
+                    Spacer(),
+                    CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Spacer(),
+                  ],
+                ),
+                backgroundColor: Theme.of(context).primaryColorDark,
+              ),
+            );
           }
           if (state is Authenticated) {
-            return Navigator.pushReplacement(context,
+            Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => BottomNavBar()));
           }
           if (state is AuthenticationError) {
+            Navigator.pop(context);
             return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 backgroundColor: kPrimaryDark,
                 content: Text(
@@ -82,17 +99,40 @@ class _SignInPageState extends State<SignInPage> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        buildSignupForm(context, "Enter Email ID", Icons.mail,
-                            false, _emailController),
+                        buildSigninForm(
+                          context: context,
+                          label: "Enter Email ID",
+                          icon: Icons.mail,
+                          protection: false,
+                          controller: _emailController,
+                          func: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter a valid input";
+                            }
+                          },
+                        ),
                         SizedBox(height: 20),
-                        buildSignupForm(context, "Enter Password", Icons.lock,
-                            true, _passwordController),
+                        buildSigninForm(
+                          context: context,
+                          label: "Enter Password",
+                          icon: Icons.lock,
+                          protection: true,
+                          controller: _passwordController,
+                          func: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Enter a valid input";
+                            }
+                          },
+                        ),
                         SizedBox(height: 30),
                         TextButton(
                           onPressed: () {
                             if (_formKey.currentState.validate()) {
                               BlocProvider.of<AuthBloc>(context)
-                                  .add(SignInRequested());
+                                  .add(SignInRequested(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ));
                             }
                           },
                           child: Text("SIGN-IN"),
@@ -142,8 +182,13 @@ class _SignInPageState extends State<SignInPage> {
     super.dispose();
   }
 
-  Widget buildSignupForm(BuildContext context, String label, IconData icon,
-      bool protection, TextEditingController _controller) {
+  Widget buildSigninForm(
+      {BuildContext context,
+      String label,
+      IconData icon,
+      bool protection,
+      TextEditingController controller,
+      @required Function func}) {
     return Row(
       children: [
         Padding(
@@ -156,32 +201,26 @@ class _SignInPageState extends State<SignInPage> {
         ),
         Flexible(
           child: TextFormField(
-            controller: _controller,
-            obscureText: protection,
-            enabled: true,
-            cursorHeight: 23,
-            cursorColor: Colors.white,
-            style: TextStyle(color: Colors.white, fontFamily: "Heebo"),
-            decoration: InputDecoration(
-                labelText: "$label",
-                labelStyle: TextStyle(color: Colors.grey[600]),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Theme.of(context).primaryColor))),
-            keyboardType:
-                protection ? TextInputType.text : TextInputType.emailAddress,
-            textInputAction:
-                protection ? TextInputAction.done : TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Enter a valid input";
-              }
-              return "";
-            },
-          ),
+              controller: controller,
+              obscureText: protection,
+              enabled: true,
+              cursorHeight: 23,
+              cursorColor: Colors.white,
+              style: TextStyle(color: Colors.white, fontFamily: "Heebo"),
+              decoration: InputDecoration(
+                  labelText: "$label",
+                  labelStyle: TextStyle(color: Colors.grey[600]),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Theme.of(context).primaryColor))),
+              keyboardType:
+                  protection ? TextInputType.text : TextInputType.emailAddress,
+              textInputAction:
+                  protection ? TextInputAction.done : TextInputAction.next,
+              validator: func),
         ),
       ],
     );

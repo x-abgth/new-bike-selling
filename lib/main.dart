@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ktm/data/repositories/authentication_repository.dart';
+import 'package:ktm/data/repositories/new_bikes_data_repository.dart';
 import 'package:ktm/logics/blocs/auth_bloc/auth_bloc.dart';
+import 'package:ktm/logics/blocs/get_bikes_bloc/get_bikes_bloc.dart';
 import 'presentation/widgets/bottom_nav_bar.dart';
 import 'core/constants/constants.dart';
 
@@ -14,10 +16,13 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider<AuthenticationRepository>(
             create: (context) => AuthenticationRepository()),
+        RepositoryProvider<NewBikesDataRepository>(
+            create: (context) => NewBikesDataRepository())
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AuthBloc>(create: (context) => AuthBloc()),
+          BlocProvider<GetBikesBloc>(create: (context) => GetBikesBloc())
         ],
         child: MaterialApp(
           title: "KTM",

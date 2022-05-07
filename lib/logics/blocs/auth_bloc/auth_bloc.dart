@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:http/http.dart';
 import 'package:ktm/data/repositories/authentication_repository.dart';
 
 part 'auth_event.dart';
@@ -16,8 +15,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       try {
         final String msg = await authenticationRepository.signInFunc(
             email: event.email, password: event.password);
-        if (msg == 'Login Matched') {
-          emit(Authenticated());
+
+        if (msg != 'Error') {
+          emit(Authenticated(userId: msg));
         } else {
           emit(AuthenticationError(errorMsg: "Login credentials do not match"));
           emit(UnAuthenticated());
@@ -31,7 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpRequested>((event, emit) async {
       emit(Authenticating());
       try {
-        final Response response = await authenticationRepository.signUpFunc(
+        final String response = await authenticationRepository.signUpFunc(
           context: event.context,
           key: event.key,
           emailTC: event.email,
@@ -46,8 +46,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           phNoTC: event.phNumber,
           unformattedSelectedDate: event.dob,
         );
-        if (response.statusCode == 200) {
-          emit(Authenticated());
+        if (response != "Error") {
+          emit(Authenticated(userId: response));
+        } else {
+          emit(AuthenticationError(
+              errorMsg: "This e-mail id is already registered."));
+          emit(UnAuthenticated());
         }
       } catch (e) {
         emit(AuthenticationError(errorMsg: e.toString()));
@@ -56,3 +60,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 }
+
+
+  // UserModel(
+  //         email: event.email,
+  //         name: "${event.firstName}" + " " + "${event.lastName}",
+  //         dob: event.dob,
+  //         phNo: event.phNumber,
+  //       );
+  //       final UserModel user = UserModel();
+  //       print(user.email);

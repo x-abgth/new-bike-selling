@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ktm/data/models/new_bikes_data_model.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/global/BookingUrlFunc.dart';
 import '../../bike_details_screen/ViewPage.dart';
 
 class BikeDataGrid extends StatelessWidget {
-  final dynamic snapshot;
+  final List<NewBikesDataModel> snapshot;
 
   BikeDataGrid({@required this.snapshot});
   @override
@@ -45,11 +46,10 @@ class BikeDataGrid extends StatelessWidget {
                                 topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10)),
                             child: Hero(
-                              tag:
-                                  "$bikesImgUrl${snapshot[index]['m_image_a']}",
+                              tag: "$bikesImgUrl${snapshot[index].mImageA}",
                               child: Image(
                                   image: NetworkImage(
-                                      "$bikesImgUrl${snapshot[index]['m_image_a']}")),
+                                      "$bikesImgUrl${snapshot[index].mImageA}")),
                             ),
                           )),
                       Container(
@@ -57,7 +57,7 @@ class BikeDataGrid extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(top: 5, left: 10),
                         child: Text(
-                          snapshot[index]['m_name'],
+                          snapshot[index].mName,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.clip,
                           style: TextStyle(
@@ -69,7 +69,7 @@ class BikeDataGrid extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 5, left: 10),
                         child: Text(
-                          "₹${snapshot[index]['m_price']}",
+                          "₹${snapshot[index].mPrice}",
                           style: TextStyle(color: Colors.white70, fontSize: 15),
                         ),
                       ),
@@ -107,7 +107,8 @@ class BikeDataGrid extends StatelessWidget {
         });
   }
 
-  Future navigateToView({@required BuildContext context, index, snapshot}) {
+  Future navigateToView(
+      {@required BuildContext context, int index, NewBikesDataModel snapshot}) {
     return Navigator.push(
         context,
         MaterialPageRoute(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/constants/constants.dart';
+import '../../../../core/constants/constants.dart';
 
 class SearchBar extends StatelessWidget {
   @override

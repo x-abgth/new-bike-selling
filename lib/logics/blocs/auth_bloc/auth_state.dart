@@ -15,8 +15,11 @@ class Authenticating extends AuthState {
 }
 
 class Authenticated extends AuthState {
+  final String userId;
+
+  Authenticated({this.userId});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [userId];
 }
 
 class AuthenticationError extends AuthState {

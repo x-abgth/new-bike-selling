@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ktm/logics/blocs/get_bikes_bloc/get_bikes_bloc.dart';
 import 'package:ktm/presentation/screens/explore_bikes_screen/widgets/BikeDataGrid.dart';
 import 'dart:async';
-import 'package:ktm/widgets/HomePageWidgets/SearchBar.dart';
+import 'package:ktm/presentation/screens/explore_bikes_screen/widgets/SearchBar.dart';
 import '../../../core/constants/constants.dart';
 
 class ExploreBikes extends StatefulWidget {
@@ -12,22 +12,16 @@ class ExploreBikes extends StatefulWidget {
 }
 
 class _ExploreBikesState extends State<ExploreBikes> {
-  List datas;
   Widget _content = Center(
     child: CircularProgressIndicator(
       valueColor: AlwaysStoppedAnimation<Color>(kPrimaryDark),
     ),
   );
 
-  // fetch data from the internet
-  Future fetchBikeData() async {
-    final response = await http.get(Uri.parse(bikesUrl));
-    if (response.statusCode == 200) {
-      datas = json.decode(response.body);
-      return datas;
-    } else {
-      throw Exception('Failed to load data');
-    }
+  @override
+  void initState() {
+    BlocProvider.of<GetBikesBloc>(context).add(LoadData());
+    super.initState();
   }
 
   @override
@@ -41,33 +35,40 @@ class _ExploreBikesState extends State<ExploreBikes> {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15),
         child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: size.width),
-            child: FutureBuilder(
-              future: fetchBikeData(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  print(snapshot.error);
-                  return buildErrorCode();
-                } else if (snapshot.hasData && snapshot.data != null) {
-                  return BikeDataGrid(snapshot: snapshot.data);
-                }
-
-                Future.delayed(Duration(seconds: 30), () {
+          constraints:
+              BoxConstraints(maxWidth: size.width, maxHeight: size.height),
+          child: BlocBuilder<GetBikesBloc, GetBikesState>(
+            builder: (context, state) {
+              if (state is GetBikesDataLoaded) {
+                return BikeDataGrid(snapshot: state.bikeData);
+              }
+              if (state is GetBikesDataLoadError) {
+                return buildErrorCode(error: state.errorMsg);
+              }
+              if (state is GetBikesDataLoading) {
+                Future.delayed(Duration(seconds: 10), () {
                   Widget retry = Center(
                     child: Padding(
                       padding: EdgeInsets.all(20),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             "Unable to access data!",
                             style: TextStyle(color: kPrimaryDark),
                           ),
                           TextButton.icon(
-                            onPressed: () async {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ExploreBikes()));
+                            onPressed: () {
+                              BlocProvider.of<GetBikesBloc>(context)
+                                  .add(LoadData());
+                              setState(() {
+                                _content = Center(
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        kPrimaryDark),
+                                  ),
+                                );
+                              });
                             },
                             icon: Icon(
                               Icons.refresh,
@@ -88,20 +89,70 @@ class _ExploreBikesState extends State<ExploreBikes> {
                     });
                   }
                 });
+              }
 
-                return _content;
-              },
-            )),
+              return _content;
+            },
+          ),
+        ),
       ),
     );
+    // child: FutureBuilder(
+    //   future: fetchBikeData(),
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) {
+    //       print(snapshot.error);
+    //       return buildErrorCode();
+    //     } else if (snapshot.hasData && snapshot.data != null) {
+    //       return BikeDataGrid(snapshot: snapshot.data);
+    //     }
+
+    // Future.delayed(Duration(seconds: 30), () {
+    //   Widget retry = Center(
+    //     child: Padding(
+    //       padding: EdgeInsets.all(20),
+    //       child: Column(
+    //         children: [
+    //           Text(
+    //             "Unable to access data!",
+    //             style: TextStyle(color: kPrimaryDark),
+    //           ),
+    //           TextButton.icon(
+    //             onPressed: () async {
+    //               Navigator.push(
+    //                   context,
+    //                   MaterialPageRoute(
+    //                       builder: (context) => ExploreBikes()));
+    //             },
+    //             icon: Icon(
+    //               Icons.refresh,
+    //               color: kPrimary,
+    //             ),
+    //             label: Text(
+    //               "Retry",
+    //               style: TextStyle(color: kPrimary),
+    //             ),
+    //           )
+    //         ],
+    //       ),
+    //     ),
+    //   );
+    //   if (mounted) {
+    //     setState(() {
+    //       _content = retry;
+    //     });
+    //   }
+    // });
+
+    // return _content;
   }
 
-  Widget buildErrorCode() {
+  Widget buildErrorCode({String error}) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Text(
-          "Something went wrong!",
+          error ?? "Something went wrong!",
           style: TextStyle(
             color: kPrimaryDark,
             fontSize: 23,

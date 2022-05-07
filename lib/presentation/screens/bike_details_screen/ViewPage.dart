@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ktm/core/constants/constants.dart';
+import 'package:ktm/data/models/new_bikes_data_model.dart';
 import '../../../core/global/BookingUrlFunc.dart';
 import 'package:ktm/presentation/screens/home_screen/widgets/HomePageCarousel.dart';
 
 class ViewPage extends StatefulWidget {
-  final dynamic index;
-  final dynamic snapshot;
+  final int index;
+  final NewBikesDataModel snapshot;
   ViewPage({this.index, this.snapshot});
 
   @override
@@ -18,13 +19,13 @@ class _ViewPageState extends State<ViewPage> {
   @override
   Widget build(BuildContext context) {
     List bikeImgs = [
-      NetworkImage("$bikesImgUrl${widget.snapshot['m_image_a']}"),
-      NetworkImage("$bikesImgUrl${widget.snapshot['m_image_b']}"),
-      NetworkImage("$bikesImgUrl${widget.snapshot['m_image_c']}")
+      NetworkImage("$bikesImgUrl${widget.snapshot.mImageA}"),
+      NetworkImage("$bikesImgUrl${widget.snapshot.mImageB}"),
+      NetworkImage("$bikesImgUrl${widget.snapshot.mImageC}")
     ];
 
     trimColors() {
-      colorNames = widget.snapshot['m_color'].split(",");
+      colorNames = widget.snapshot.mColor.split(",");
     }
 
     Size size = MediaQuery.of(context).size;
@@ -40,7 +41,7 @@ class _ViewPageState extends State<ViewPage> {
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 background: Hero(
-                  tag: "$bikesImgUrl${widget.snapshot['m_image_a']}",
+                  tag: "$bikesImgUrl${widget.snapshot.mImageA}",
                   child: HomePageCarousel(
                     duration: 0,
                     height: 2.5,
@@ -88,7 +89,7 @@ class _ViewPageState extends State<ViewPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.snapshot['m_name'],
+              widget.snapshot.mName,
               style: TextStyle(
                   fontSize: 25, fontWeight: FontWeight.bold, color: kPrimary),
             ),
@@ -97,7 +98,7 @@ class _ViewPageState extends State<ViewPage> {
               child: buildText(
                 color: Colors.white60,
                 tSize: 15,
-                text: "₹${widget.snapshot['m_price']}",
+                text: "₹${widget.snapshot.mPrice}",
               ),
             ),
             Padding(
@@ -114,7 +115,7 @@ class _ViewPageState extends State<ViewPage> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5.0),
                         child: buildText(
-                          text: widget.snapshot['m_category'],
+                          text: widget.snapshot.mCategory,
                           tSize: 15,
                           color: Colors.white60,
                         ),
@@ -159,7 +160,7 @@ class _ViewPageState extends State<ViewPage> {
                 ),
                 Spacer(),
                 buildText(
-                  text: widget.snapshot['m_mileage'],
+                  text: widget.snapshot.mMileage,
                   tSize: 15,
                   color: Colors.white60,
                 ),
@@ -174,7 +175,7 @@ class _ViewPageState extends State<ViewPage> {
                 ),
                 Spacer(),
                 buildText(
-                  text: widget.snapshot['m_displacement'],
+                  text: widget.snapshot.mDisplacement,
                   tSize: 15,
                   color: Colors.white60,
                 ),
@@ -193,7 +194,7 @@ class _ViewPageState extends State<ViewPage> {
                   children: [
                     Expanded(
                       child: buildText(
-                        text: widget.snapshot['m_engine'],
+                        text: widget.snapshot.mEngine,
                         tSize: 15,
                         color: Colors.white60,
                       ),
@@ -211,7 +212,7 @@ class _ViewPageState extends State<ViewPage> {
                 ),
                 Spacer(),
                 buildText(
-                  text: widget.snapshot['m_cylinders'],
+                  text: widget.snapshot.mCylinders,
                   tSize: 15,
                   color: Colors.white60,
                 ),
@@ -226,7 +227,7 @@ class _ViewPageState extends State<ViewPage> {
                 ),
                 Spacer(),
                 buildText(
-                  text: widget.snapshot['m_power'],
+                  text: widget.snapshot.mPower,
                   tSize: 15,
                   color: Colors.white60,
                 ),
@@ -241,7 +242,7 @@ class _ViewPageState extends State<ViewPage> {
                 ),
                 Spacer(),
                 buildText(
-                  text: widget.snapshot['m_torque'],
+                  text: widget.snapshot.mTorque,
                   tSize: 15,
                   color: Colors.white60,
                 ),
@@ -256,7 +257,7 @@ class _ViewPageState extends State<ViewPage> {
                 ),
                 Spacer(),
                 buildText(
-                  text: widget.snapshot['m_fuel_tank'],
+                  text: widget.snapshot.mFuelTank,
                   tSize: 15,
                   color: Colors.white60,
                 ),
@@ -271,7 +272,7 @@ class _ViewPageState extends State<ViewPage> {
                 ),
                 Spacer(),
                 buildText(
-                  text: widget.snapshot['m_abs'],
+                  text: widget.snapshot.mAbs,
                   tSize: 15,
                   color: Colors.white60,
                 ),
@@ -287,7 +288,7 @@ class _ViewPageState extends State<ViewPage> {
                 ),
                 SizedBox(height: 10),
                 buildText(
-                  text: widget.snapshot['m_key_features'],
+                  text: widget.snapshot.mKeyFeatures,
                   tSize: 15,
                   color: Colors.white60,
                 ),

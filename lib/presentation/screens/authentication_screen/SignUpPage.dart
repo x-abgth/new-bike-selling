@@ -58,14 +58,29 @@ class _SignUpPageState extends State<SignUpPage> {
         listener: (context, state) {
           if (state is Authenticating) {
             return showDialog(
-                context: context,
-                builder: (context) => CircularProgressIndicator());
+              context: context,
+              barrierDismissible: false,
+              builder: (context) => AlertDialog(
+                title: Text("Please wait. Signing up..."),
+                content: Row(
+                  children: [
+                    Spacer(),
+                    CircularProgressIndicator(
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    Spacer(),
+                  ],
+                ),
+                backgroundColor: Theme.of(context).primaryColorDark,
+              ),
+            );
           }
           if (state is Authenticated) {
-            return Navigator.pushReplacement(context,
+            Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => BottomNavBar()));
           }
           if (state is AuthenticationError) {
+            Navigator.pop(context);
             return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 backgroundColor: kPrimaryDark,
                 content: Text(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ktm/data/models/user_model.dart';
 import 'package:ktm/data/providers/providerClass.dart';
 import 'package:ktm/presentation/screens/profile_screen/widgets/ProfileEditBodySection.dart';
 import 'package:ktm/presentation/screens/profile_screen/widgets/ProfileHeaderSection.dart';
@@ -6,6 +7,7 @@ import 'package:ktm/core/constants/constants.dart';
 import 'package:provider/provider.dart';
 
 class ProfilePage extends StatelessWidget {
+  final UserModel _user = UserModel();
   // should be saved in shared pref
   final bool isLoggedIn = false;
   @override
@@ -20,7 +22,7 @@ class ProfilePage extends StatelessWidget {
           ),
           backgroundColor: Theme.of(context).primaryColorDark,
           actions: [
-            isLoggedIn
+            _user.email != null
                 ? Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: TextButton.icon(
