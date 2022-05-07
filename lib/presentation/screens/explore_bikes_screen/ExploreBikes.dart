@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ktm/logics/blocs/get_bikes_bloc/get_bikes_bloc.dart';
 import 'package:ktm/presentation/screens/explore_bikes_screen/widgets/BikeDataGrid.dart';
-import 'dart:async';
 import 'package:ktm/presentation/screens/explore_bikes_screen/widgets/SearchBar.dart';
 import '../../../core/constants/constants.dart';
 
@@ -35,8 +34,7 @@ class _ExploreBikesState extends State<ExploreBikes> {
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 15),
         child: ConstrainedBox(
-          constraints:
-              BoxConstraints(maxWidth: size.width, maxHeight: size.height),
+          constraints: BoxConstraints(maxWidth: size.width),
           child: BlocBuilder<GetBikesBloc, GetBikesState>(
             builder: (context, state) {
               if (state is GetBikesDataLoaded) {
@@ -90,61 +88,12 @@ class _ExploreBikesState extends State<ExploreBikes> {
                   }
                 });
               }
-
               return _content;
             },
           ),
         ),
       ),
     );
-    // child: FutureBuilder(
-    //   future: fetchBikeData(),
-    //   builder: (context, snapshot) {
-    //     if (snapshot.hasError) {
-    //       print(snapshot.error);
-    //       return buildErrorCode();
-    //     } else if (snapshot.hasData && snapshot.data != null) {
-    //       return BikeDataGrid(snapshot: snapshot.data);
-    //     }
-
-    // Future.delayed(Duration(seconds: 30), () {
-    //   Widget retry = Center(
-    //     child: Padding(
-    //       padding: EdgeInsets.all(20),
-    //       child: Column(
-    //         children: [
-    //           Text(
-    //             "Unable to access data!",
-    //             style: TextStyle(color: kPrimaryDark),
-    //           ),
-    //           TextButton.icon(
-    //             onPressed: () async {
-    //               Navigator.push(
-    //                   context,
-    //                   MaterialPageRoute(
-    //                       builder: (context) => ExploreBikes()));
-    //             },
-    //             icon: Icon(
-    //               Icons.refresh,
-    //               color: kPrimary,
-    //             ),
-    //             label: Text(
-    //               "Retry",
-    //               style: TextStyle(color: kPrimary),
-    //             ),
-    //           )
-    //         ],
-    //       ),
-    //     ),
-    //   );
-    //   if (mounted) {
-    //     setState(() {
-    //       _content = retry;
-    //     });
-    //   }
-    // });
-
-    // return _content;
   }
 
   Widget buildErrorCode({String error}) {
